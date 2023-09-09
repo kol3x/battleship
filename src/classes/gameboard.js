@@ -1,17 +1,4 @@
-class Ship {
-  constructor(len) {
-    this.len = len;
-    this.cords = [];
-    this.timesHit = 0;
-  }
-  hit() {
-    this.timesHit += 1;
-  }
-  isSunk() {
-    if (this.len === this.timesHit) return true;
-    return false;
-  }
-}
+import { Ship } from "./ship";
 
 class Gameboard {
   constructor() {
@@ -20,6 +7,7 @@ class Gameboard {
     this.ships = [];
   }
   placeShip(cords, len, direction) {
+    // Make sure you can't place ship beyond edge
     let cord = null;
     if (direction === "horizon") {
       cord = cords[1];
@@ -34,8 +22,9 @@ class Gameboard {
     let ship = new Ship(len);
 
     for (let i = 0; i < len; i++) {
+      // so you can't place 2 ships in the same cell
       if (this.map[y][x] === "ship") return false;
-
+      // so you can't place 2 adjacent ships
       if (adjacentShips(y, x, direction, i, this.map)) return false;
 
       ship.cords.push([y, x]);
@@ -49,12 +38,11 @@ class Gameboard {
 
     this.ships.push(ship);
   }
-
   allShipsSunk() {
     for (let i = 0; i < this.ships.length; i++) {
       for (let j = 0; j < this.ships[i].cords.length; j++) {
-        const [y, x] = this.ships[i].cords[j];  
-        if (this.map[y][x] === 'ship') return false;
+        const [y, x] = this.ships[i].cords[j];
+        if (this.map[y][x] === "ship") return false;
       }
     }
     return true;
@@ -124,4 +112,5 @@ function adjacentShips(y, x, direction, iterable, map) {
   return false;
 }
 
-export { Ship, Gameboard };
+
+export { Gameboard };

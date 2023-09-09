@@ -1,0 +1,29 @@
+table > tr {
+ font-size: 30px;
+ margin-bottom: 20px;
+ display: grid;
+ grid-template-columns: repeat(10, 70px);
+}
+tr > td {
+  border: 1px solid black;
+  width: 60px;
+  height: 43px;
+  font-size: 20px;
+  display: grid;
+  place-content: center;
+}
+
+body {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-auto-flow: column;
+  gap: 500px;
+}
+
+.truebot {
+ grid-column: 0; 
+}
+
+.falsebot {
+ grid-column: 1;
+}

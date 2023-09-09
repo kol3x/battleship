@@ -1,4 +1,6 @@
-import { Ship, Gameboard } from "./logic";
+import { Ship } from "./classes/ship";
+import { Gameboard } from "./classes/gameboard";
+import { Player } from "./classes/player";
 
 test("ship correct length", () => {
   let ship = new Ship(3);
@@ -172,3 +174,4 @@ test("gameboard aware when not all of it ships have sunk", () => {
   
   expect(gameboard.allShipsSunk()).toBe(false);
 })
+
