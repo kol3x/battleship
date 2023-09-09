@@ -1,29 +1,75 @@
-table > tr {
- font-size: 30px;
- margin-bottom: 20px;
- display: grid;
- grid-template-columns: repeat(10, 70px);
+body {
+  background: rgb(0, 212, 255);
+  background: linear-gradient(
+    90deg,
+    rgba(0, 212, 255, 1) 50%,
+    rgba(2, 0, 36, 1) 50%
+  );
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-row: 1fr 5fr;
+  grid-auto-flow: column;
+  font-family: system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif,
+  "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+
 }
-tr > td {
+
+table {
+  padding: 10px;
+  place-self: center;
+  display: grid;
+}
+
+tr {
+  font-size: 30px;
+  margin-bottom: 10px;
+  display: grid;
+  grid-template-columns: repeat(10, 6vh);
+  place-items: center;
+}
+
+td {
   border: 1px solid black;
-  width: 60px;
-  height: 43px;
-  font-size: 20px;
+  width: 2vw;
+  height: 3vh;
+  font-size: 25px;
   display: grid;
   place-content: center;
 }
 
-body {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-auto-flow: column;
-  gap: 500px;
+.truebot > tr > td:hover {
+  background-color: rgb(196, 196, 196);
 }
 
-.truebot {
- grid-column: 0; 
+.truebot,
+.truebot > table {
+  grid-row: 2;
+  grid-column: 2;
+  background-color: rgb(216, 216, 216);
 }
 
 .falsebot {
- grid-column: 1;
+  grid-row: 2;
+  grid-column: 1;
+  background-color: rgb(216, 216, 216);
+}
+
+h2 {
+  place-self: center;
+}
+
+h1.firstHead {
+  grid-row: 1;
+  place-self: end;
+  border-left: 3px solid black;
+  padding-right: 5px;
+}
+
+h1.secondHead {
+  grid-column: 2;
+  grid-row: 1;
+  place-self: start;
+  color: white;
+  border-right: 3px solid white;
+  padding-left: 10px;
 }

@@ -13,7 +13,7 @@ function drawPlayerBoard(player) {
     const row = document.createElement("tr");
     for (let j = 0; j < 10; j++) {
       const cell = document.createElement("td");
-      cell.innerText = player.gameboard.map[i][j];
+        cell.innerText = wordToIcon(player.gameboard.map[i][j]);
       row.append(cell);
     }
     board.append(row);
@@ -32,13 +32,13 @@ function drawBotBoard(bot, player) {
     const row = document.createElement("tr");
     for (let j = 0; j < 10; j++) {
       const cell = document.createElement("td");
-      if (bot.gameboard.map[i][j] !== 'ship') cell.innerText = bot.gameboard.map[i][j];
+      if (bot.gameboard.map[i][j] !== "ship")
+        cell.innerText = wordToIcon(bot.gameboard.map[i][j]);
       cell.addEventListener("click", () => {
         if (player.turn) {
           if (player.humanTurn(bot.gameboard, i, j) === false) return;
           document.querySelector(".truebot").remove();
-          bot.turn = true;
-          player.turn = false;
+          [player.turn, bot.turn] = [false, true];
           drawBotBoard(bot, player);
         }
       });
@@ -46,8 +46,7 @@ function drawBotBoard(bot, player) {
         bot.botTurn(player.gameboard);
         document.querySelector(".falsebot").remove();
         drawPlayerBoard(player, bot);
-        player.turn = !player.turn;
-        bot.turn = !bot.turn;
+        [player.turn, bot.turn] = [true, false];
       }
 
       row.append(cell);
@@ -56,6 +55,17 @@ function drawBotBoard(bot, player) {
   }
   document.querySelector("body").append(board);
   didAnyoneWin(player, bot);
+}
+
+function wordToIcon(cell) {
+  if (cell === "ship") {
+    return "🚢";
+  } else if (cell === "miss") {
+    return "🌊"
+  } else if (cell === "hit"){
+     return "💥"
+  }
+  return "";
 }
 
 export { drawPlayerBoard, drawBotBoard };
