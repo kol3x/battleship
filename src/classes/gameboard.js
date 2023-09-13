@@ -6,14 +6,19 @@ class Gameboard {
     this.map = Array.from({ length: 10 }, () => Array(10).fill(null));
     this.ships = [];
   }
+  log() {
+    console.log(this.map);
+  }
+
   placeShip(cords, len, direction) {
-    // Make sure you can't place ship beyond edge
+    
     let cord = null;
     if (direction === "horizon") {
       cord = cords[1];
     } else {
       cord = cords[0];
     }
+    // Make sure you can't place ship beyond edge
     if (10 - len - cord < 0) return false;
 
     let y = cords[0];
@@ -35,9 +40,21 @@ class Gameboard {
         y += 1;
       }
     }
-
     this.ships.push(ship);
   }
+  randomPlaceShip(len) {
+    const directions = ["horizon", "vertical"];
+    let direction;
+    let cords;
+    while (true) {
+      let y = Math.floor(Math.random() * 10);
+      let x = Math.floor(Math.random() * 10);
+      cords = [y, x];
+      direction = Math.random() >= 0.5 ? 1 : 0;
+      if (this.placeShip(cords, len, directions[direction]) !== false) return;
+    } 
+  }
+
   allShipsSunk() {
     for (let i = 0; i < this.ships.length; i++) {
       for (let j = 0; j < this.ships[i].cords.length; j++) {
@@ -111,6 +128,5 @@ function adjacentShips(y, x, direction, iterable, map) {
   }
   return false;
 }
-
 
 export { Gameboard };

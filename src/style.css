@@ -6,8 +6,8 @@ body {
     rgba(2, 0, 36, 1) 50%
   );
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-row: 1fr 5fr;
+  grid-template-columns: 1fr;
+  grid-row: 1fr 1fr;
   grid-auto-flow: column;
   font-family: system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif,
   "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
@@ -15,7 +15,6 @@ body {
 }
 
 table {
-  padding: 10px;
   place-self: center;
   display: grid;
 }
@@ -29,10 +28,11 @@ tr {
 }
 
 td {
-  border: 1px solid black;
-  width: 2vw;
-  height: 3vh;
+  border: 2px solid black;
+  border-radius: 10%;
   font-size: 25px;
+  height: 3vh;
+  width: 2vw;
   display: grid;
   place-content: center;
 }
@@ -41,35 +41,71 @@ td {
   background-color: rgb(196, 196, 196);
 }
 
+.truebot:hover {
+  cursor:crosshair;
+}
+  
+
+.falsebot > tr > td:hover {
+  cursor:default;
+}
+
+.gameboards {
+  grid-row: 2;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
 .truebot,
 .truebot > table {
-  grid-row: 2;
   grid-column: 2;
-  background-color: rgb(216, 216, 216);
+  background-color: rgb(255, 232, 229);
 }
 
 .falsebot {
-  grid-row: 2;
   grid-column: 1;
-  background-color: rgb(216, 216, 216);
+  background-color: rgb(231, 255, 239);
 }
 
 h2 {
   place-self: center;
 }
 
-h1.firstHead {
+.mainHeader {
+  font-size: 20px;
   grid-row: 1;
+  display: grid;
+  grid-template-columns: 1fr 1rf;
+}
+
+h1.firstHead {
   place-self: end;
   border-left: 3px solid black;
-  padding-right: 5px;
+  padding-right: 60px;
 }
 
 h1.secondHead {
   grid-column: 2;
-  grid-row: 1;
   place-self: start;
   color: white;
   border-right: 3px solid white;
-  padding-left: 10px;
+  padding-left: 15px;
+}
+
+
+.startButton {
+  margin-top: 300px;
+  grid-row: 2;
+  place-self: center;
+  border:none;
+  width: 30%;
+  height: 50%;
+  font-size: 50px;
+  background-color: black;
+  color: white;
+}
+.startButton:hover {
+  cursor: pointer;
+  background-color: white;
+  color: black;
 }

@@ -1,32 +1,38 @@
 import { Player } from "./classes/player";
-import { drawPlayerBoard, drawBotBoard } from "./dom";
-import './style.css';
+import { drawPlayerBoard, drawBotBoard, createGameboardsDiv } from "./dom";
+import "./style.css";
 
 document.addEventListener("DOMContentLoaded", () => {
-  let human = new Player(true, false);
-  let bot = new Player(false, true);
+  const startButton = document.querySelector(".startButton");
+  startButton.addEventListener("click", () => {
+    startButton.remove();
 
-  human.gameboard.placeShip([0, 1], 5, "horizon");
-  human.gameboard.placeShip([2, 2], 4, "horizon");
-  human.gameboard.placeShip([4, 3], 3, "horizon");
-  human.gameboard.placeShip([6, 0], 2, "horizon");
-  human.gameboard.placeShip([9, 5], 2, "horizon");
-  human.gameboard.placeShip([6, 7], 1, "horizon");
-  human.gameboard.placeShip([8, 8], 1, "horizon");
+    let human = new Player(true, false);
+    let bot = new Player(false, true);
 
-  bot.gameboard.placeShip([0, 1], 5, "horizon");
-  bot.gameboard.placeShip([2, 2], 4, "horizon");
-  bot.gameboard.placeShip([4, 3], 3, "horizon");
-  bot.gameboard.placeShip([6, 0], 2, "horizon");
-  bot.gameboard.placeShip([9, 5], 2, "horizon");
-  bot.gameboard.placeShip([6, 7], 1, "horizon");
-  bot.gameboard.placeShip([8, 8], 1, "horizon");
+    human.gameboard.randomPlaceShip(5);
+    human.gameboard.randomPlaceShip(4);
+    human.gameboard.randomPlaceShip(3);
+    human.gameboard.randomPlaceShip(2);
+    human.gameboard.randomPlaceShip(2);
+    human.gameboard.randomPlaceShip(1);
+    human.gameboard.randomPlaceShip(1);
+    human.gameboard.log();
 
-  drawPlayerBoard(human);
-  drawBotBoard(bot, human);
+    bot.gameboard.randomPlaceShip(5);
+    bot.gameboard.randomPlaceShip(4);
+    bot.gameboard.randomPlaceShip(3);
+    bot.gameboard.randomPlaceShip(2);
+    bot.gameboard.randomPlaceShip(2);
+    bot.gameboard.randomPlaceShip(1);
+    bot.gameboard.randomPlaceShip(1);
+    bot.gameboard.log();
 
-
-})
+    createGameboardsDiv();
+    drawPlayerBoard(human);
+    drawBotBoard(bot, human);
+  });
+});
 
 function didAnyoneWin(human, bot) {
   if (bot.gameboard.allShipsSunk()) {

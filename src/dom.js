@@ -1,5 +1,11 @@
 import { didAnyoneWin } from "./gameloop";
 
+function createGameboardsDiv() {
+  const gameboards = document.createElement("div");
+  gameboards.classList.add("gameboards");
+  document.querySelector("body").append(gameboards);
+}
+
 function drawPlayerBoard(player) {
   const board = document.createElement("table");
   const title = document.createElement("h2");
@@ -18,7 +24,7 @@ function drawPlayerBoard(player) {
     }
     board.append(row);
   }
-  document.querySelector("body").append(board);
+  document.querySelector(".gameboards").append(board);
 }
 
 function drawBotBoard(bot, player) {
@@ -53,7 +59,7 @@ function drawBotBoard(bot, player) {
     }
     board.append(row);
   }
-  document.querySelector("body").append(board);
+  document.querySelector(".gameboards").append(board);
   didAnyoneWin(player, bot);
 }
 
@@ -68,4 +74,11 @@ function wordToIcon(cell) {
   return "";
 }
 
-export { drawPlayerBoard, drawBotBoard };
+function gameoverScreen(isWin) {
+  document.querySelector(".gameboards").remove();
+  if (isWin) {
+    
+  }
+}
+
+export { drawPlayerBoard, drawBotBoard, createGameboardsDiv };
