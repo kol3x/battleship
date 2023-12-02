@@ -7,31 +7,38 @@ class Gameboard {
     this.ships = [];
   }
   log() {
+    let cells = 0;
+    this.map.forEach((row) => {
+      row.forEach((cell) => {
+        if (cell === "ship") cells += 1;
+      });
+    });
+    console.log(cells);
     console.log(this.map);
   }
 
   placeShip(cords, len, direction) {
-    
-    let cord = null;
-    if (direction === "horizon") {
-      cord = cords[1];
-    } else {
-      cord = cords[0];
-    }
-    // Make sure you can't place ship beyond edge
-    if (10 - len - cord < 0) return false;
-
     let y = cords[0];
     let x = cords[1];
 
     let ship = new Ship(len);
 
+    let yCheck = cords[0];
+    let xCheck = cords[1];
     for (let i = 0; i < len; i++) {
+      // so you can't place 2 adjacent ships or go off the edge
+      if (xCheck < 0 || xCheck > 9 || yCheck < 0 || yCheck > 9) return false;
+      if (this.adjacentShips(yCheck, xCheck)) return false;
       // so you can't place 2 ships in the same cell
       if (this.map[y][x] === "ship") return false;
-      // so you can't place 2 adjacent ships
-      if (adjacentShips(y, x, direction, i, this.map)) return false;
+      if (direction === "horizon") {
+        xCheck += 1;
+      } else {
+        yCheck += 1;
+      }
+    }
 
+    for (let i = 0; i < len; i++) {
       ship.cords.push([y, x]);
       this.map[y][x] = "ship";
       if (direction === "horizon") {
@@ -41,18 +48,18 @@ class Gameboard {
       }
     }
     this.ships.push(ship);
+    return true;
   }
+
   randomPlaceShip(len) {
-    const directions = ["horizon", "vertical"];
-    let direction;
-    let cords;
     while (true) {
-      let y = Math.floor(Math.random() * 10);
-      let x = Math.floor(Math.random() * 10);
-      cords = [y, x];
-      direction = Math.random() >= 0.5 ? 1 : 0;
-      if (this.placeShip(cords, len, directions[direction]) !== false) return;
-    } 
+      const direction = Math.random() >= 0.5 ? "horizon" : "vertical";
+      const [y, x] = [
+        Math.round(Math.random() * 10),
+        Math.round(Math.random() * 10),
+      ];
+      if (this.placeShip([y, x], len, direction) !== false) return;
+    }
   }
 
   allShipsSunk() {
@@ -89,44 +96,26 @@ class Gameboard {
         return false;
     }
   }
-}
 
-function isCellValid(cell) {
-  return cell !== null && cell !== undefined;
-}
-
-function adjacentShips(y, x, direction, iterable, map) {
-  const toCheck = [-1, 1];
-
-  if (iterable === 0) {
-    for (let i = 0; i < 2; i++) {
-      if (
-        isCellValid(map[y + toCheck[i]]?.[x]) ||
-        isCellValid(map[y]?.[x + toCheck[i]]) ||
-        isCellValid(map[y + toCheck[i]]?.[x + toCheck[i]]) ||
-        isCellValid(map[y - toCheck[i]]?.[x + toCheck[i]])
-      ) {
-        return true;
-      }
-    }
-  } else if (direction === "horizon" && iterable > 0) {
+  adjacentShips(y, x) {
     if (
-      isCellValid(map[y - 1]?.[x + 1]) ||
-      isCellValid(map[y]?.[x + 1]) ||
-      isCellValid(map[y + 1]?.[x + 1])
-    ) {
+      (y !== 0 && this.map[y - 1][x] === "ship") ||
+      (x !== 0 && this.map[y][x - 1] === "ship") ||
+      (y !== 9 && this.map[y + 1][x] === "ship") ||
+      (x !== 9 && this.map[y][x + 1] === "ship")
+    )
       return true;
-    }
-  } else if (direction === "vertical" && iterable > 0) {
+
     if (
-      isCellValid(map[y + 1]?.[x - 1]) ||
-      isCellValid(map[y + 1]?.[x]) ||
-      isCellValid(map[y + 1]?.[x + 1])
-    ) {
+      (y !== 0 && x !== 0 && this.map[y - 1][x - 1] === "ship") ||
+      (y !== 0 && x !== 9 && this.map[y - 1][x + 1] === "ship") ||
+      (y !== 9 && x !== 0 && this.map[y + 1][x - 1] === "ship") ||
+      (y !== 9 && x !== 9 && this.map[y + 1][x + 1] === "ship")
+    )
       return true;
-    }
+
+    return false;
   }
-  return false;
 }
 
 export { Gameboard };

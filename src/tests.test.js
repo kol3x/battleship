@@ -175,3 +175,15 @@ test("gameboard aware when not all of it ships have sunk", () => {
   expect(gameboard.allShipsSunk()).toBe(false);
 })
 
+test("ship doesn't place adjacent to another ship", () => {
+  let gameboard = new Gameboard();
+  gameboard.placeShip([1, 6], 5, 'vertical'); 
+  expect(gameboard.placeShip([5, 2], 4, 'horizon')).toBe(false);
+  
+})
+
+test("check if a cell has adjacent ships", () => {
+  let gameboard = new Gameboard();
+  gameboard.placeShip([1, 6], 5, 'vertical'); 
+  expect(gameboard.adjacentShips(5, 5)).toBe(true);
+})

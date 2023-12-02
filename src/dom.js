@@ -19,7 +19,7 @@ function drawPlayerBoard(player) {
     const row = document.createElement("tr");
     for (let j = 0; j < 10; j++) {
       const cell = document.createElement("td");
-        cell.innerText = wordToIcon(player.gameboard.map[i][j]);
+      cell.innerText = wordToIcon(player.gameboard.map[i][j]);
       row.append(cell);
     }
     board.append(row);
@@ -67,18 +67,17 @@ function wordToIcon(cell) {
   if (cell === "ship") {
     return "🚢";
   } else if (cell === "miss") {
-    return "🌊"
-  } else if (cell === "hit"){
-     return "💥"
+    return "🌊";
+  } else if (cell === "hit") {
+    return "💥";
   }
   return "";
 }
 
 function gameoverScreen(isWin) {
   document.querySelector(".gameboards").remove();
-  if (isWin) {
-    
-  }
+  // if (isWin) {
+  // }
 }
 
 export { drawPlayerBoard, drawBotBoard, createGameboardsDiv };

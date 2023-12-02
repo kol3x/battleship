@@ -17,6 +17,7 @@ document.addEventListener("DOMContentLoaded", () => {
     human.gameboard.randomPlaceShip(2);
     human.gameboard.randomPlaceShip(1);
     human.gameboard.randomPlaceShip(1);
+
     human.gameboard.log();
 
     bot.gameboard.randomPlaceShip(5);
