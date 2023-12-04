@@ -6,19 +6,16 @@ document.addEventListener("DOMContentLoaded", () => {
   const startButton = document.querySelector(".startButton");
   startButton.addEventListener("click", () => {
     startButton.remove();
-
     let human = new Player(true, false);
     let bot = new Player(false, true);
 
-    human.gameboard.randomPlaceShip(5);
-    human.gameboard.randomPlaceShip(4);
-    human.gameboard.randomPlaceShip(3);
-    human.gameboard.randomPlaceShip(2);
-    human.gameboard.randomPlaceShip(2);
-    human.gameboard.randomPlaceShip(1);
-    human.gameboard.randomPlaceShip(1);
-
-    human.gameboard.log();
+    // human.gameboard.randomPlaceShip(5);
+    // human.gameboard.randomPlaceShip(4);
+    // human.gameboard.randomPlaceShip(3);
+    // human.gameboard.randomPlaceShip(2);
+    // human.gameboard.randomPlaceShip(2);
+    // human.gameboard.randomPlaceShip(1);
+    // human.gameboard.randomPlaceShip(1);
 
     bot.gameboard.randomPlaceShip(5);
     bot.gameboard.randomPlaceShip(4);
@@ -27,10 +24,9 @@ document.addEventListener("DOMContentLoaded", () => {
     bot.gameboard.randomPlaceShip(2);
     bot.gameboard.randomPlaceShip(1);
     bot.gameboard.randomPlaceShip(1);
-    bot.gameboard.log();
 
     createGameboardsDiv();
-    drawPlayerBoard(human);
+    drawPlayerBoard(human, bot);
     drawBotBoard(bot, human);
   });
 });
