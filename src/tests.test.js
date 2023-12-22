@@ -111,7 +111,6 @@ test("hitting same ship cell twice fails", () => {
 test("hitting same empty cell twice fails", () => {
   let gameboard = new Gameboard();
   gameboard.receiveAttack([0, 0]);
-  console.log(gameboard.map[0][0]);
   expect(gameboard.receiveAttack([0, 0])).toBe(false);
 });
 

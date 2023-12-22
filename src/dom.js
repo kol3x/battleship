@@ -1,10 +1,17 @@
-import { didAnyoneWin } from "./gameloop";
-
 let shipsToPlace = [];
 let direction = "horizon";
 let mouseoverLen = [0, 0];
 let mouseoverPos = [];
 let overed = false;
+
+function didAnyoneWin(bot, player) {
+  if (bot.gameboard.allShipsSunk()) {
+    return "win";
+  } else if (player.gameboard.allShipsSunk()) {
+    return "lose";
+  }
+  return false;
+}
 
 function createGameboardsDiv() {
   const gameboards = document.createElement("div");
@@ -14,6 +21,11 @@ function createGameboardsDiv() {
 }
 
 function redraw(who, bot, player) {
+  if (shipsToPlace.length === 0 && didAnyoneWin(bot, player) === "win")
+    return gameoverScreen(true);
+  if (shipsToPlace.length === 0 && didAnyoneWin(bot, player) === "lose")
+    return gameoverScreen(false);
+
   if (who === "bot") {
     document.querySelector(".truebot").remove();
     drawBotBoard(bot, player);
@@ -24,7 +36,6 @@ function redraw(who, bot, player) {
 }
 
 function drawPlayerBoard(player, bot) {
-  console.log("render");
   const board = document.createElement("table");
   const title = document.createElement("h2");
 
@@ -47,7 +58,6 @@ function drawPlayerBoard(player, bot) {
           i == mouseoverPos[0] &&
           j >= mouseoverPos[1]
         ) {
-          console.log(mouseoverLen, mouseoverPos);
           cell.innerText = "🚢";
           mouseoverLen[1] -= 1;
         } else if (
@@ -102,15 +112,20 @@ function drawPlayerBoard(player, bot) {
   if (shipsToPlace.length !== 0) {
     const vertical = document.createElement("button");
     vertical.innerText = "Vertical";
+    vertical.classList.add("placementButton", "vertical");
     vertical.addEventListener("click", () => {
       direction = "vertical";
     });
     const horizontal = document.createElement("button");
     horizontal.innerText = "Horizontal";
+    horizontal.classList.add("placementButton", "horizontal");
     horizontal.addEventListener("click", () => {
       direction = "horizon";
     });
-    board.append(vertical, horizontal);
+    const startText = document.createElement("h1");
+    startText.innerText = "Place your ships to start the game";
+    startText.classList.add("startText");
+    board.append(startText, vertical, horizontal);
   }
 
   document.querySelector(".gameboards").append(board);
@@ -165,10 +180,18 @@ function wordToIcon(cell) {
   return "";
 }
 
-// function gameoverScreen(isWin) {
-//   if (shipsToPlace.length === 0 && gameOver) {
-//     document.querySelector(".gameboards").remove();
-//   }
-// }
+function gameoverScreen(playerWon) {
+  document.querySelector(".gameboards").remove();
+  const winScreen = document.createElement("h1");
+  winScreen.classList.add("gameoverScreen");
+  if (playerWon) {
+    winScreen.innerText =
+      "You've sunk all enemy ships! Congratulations! Refresh the page to start over.";
+  } else {
+    winScreen.innerText =
+      "You've lost the fight, but the war is not over yet... Refresh the page to start over.";
+  }
+  document.querySelector("body").append(winScreen);
+}
 
 export { drawPlayerBoard, drawBotBoard, createGameboardsDiv };

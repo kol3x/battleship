@@ -6,16 +6,6 @@ class Gameboard {
     this.map = Array.from({ length: 10 }, () => Array(10).fill(null));
     this.ships = [];
   }
-  log() {
-    let cells = 0;
-    this.map.forEach((row) => {
-      row.forEach((cell) => {
-        if (cell === "ship") cells += 1;
-      });
-    });
-    console.log(cells);
-    console.log(this.map);
-  }
 
   placeShip(cords, len, direction) {
     let y = cords[0];
