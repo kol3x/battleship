@@ -38,9 +38,7 @@ function redraw(who, bot, player) {
 function drawPlayerBoard(player, bot) {
   const board = document.createElement("table");
   const title = document.createElement("h2");
-
   title.innerText = "You";
-
   board.append(title);
 
   board.classList.add("falsebot");
@@ -51,82 +49,28 @@ function drawPlayerBoard(player, bot) {
       cell.innerText = wordToIcon(player.gameboard.map[i][j]);
       cell.classList.add(player.gameboard.map[i][j]);
 
-      // this section is for when player hasn't places ships yet
+      // this section is for when player hasn't placed ships yet
       if (shipsToPlace !== 0) {
-        if (
-          mouseoverLen[1] > 0 &&
-          i == mouseoverPos[0] &&
-          j >= mouseoverPos[1]
-        ) {
-          cell.innerText = "🚢";
-          mouseoverLen[1] -= 1;
-        } else if (
-          mouseoverLen[0] > 0 &&
-          i >= mouseoverPos[0] &&
-          j == mouseoverPos[1]
-        ) {
-          cell.innerText = "🚢";
-
-          mouseoverLen[0] -= 1;
-        }
+        const currShipToPlaceLen = shipsToPlace[shipsToPlace.length - 1];
         if (!overed) {
           cell.addEventListener("mouseenter", () => {
-            overed = true;
-            mouseoverPos.push(i, j);
-            if (direction === "horizon") {
-              mouseoverLen = [0, shipsToPlace[shipsToPlace.length - 1]];
-            } else {
-              mouseoverLen = [shipsToPlace[shipsToPlace.length - 1], 0];
-            }
-
-            redraw("player", bot, player);
+            handleCellHover(i, j, currShipToPlaceLen, player, bot);
           });
-        }
-        if (overed) {
+        } else {
+          if (shipPlacementPreview(i, j)) cell.innerText = "🚢";
           cell.addEventListener("mouseout", () => {
-            mouseoverPos = [];
-            mouseoverLen = [0, 0];
-            overed = false;
-            // if (!cell.classList.contains("ship")) cell.innerText = "";
-            redraw("player", bot, player);
+            handleCellUnhover(player, bot);
           });
         }
         cell.addEventListener("click", () => {
-          let currentShipToPlaceLen = shipsToPlace[shipsToPlace.length - 1];
-          if (
-            player.gameboard.placeShip(
-              [i, j],
-              currentShipToPlaceLen,
-              direction
-            ) !== false
-          ) {
-            shipsToPlace.pop();
-          }
-          redraw("player", bot, player);
+          handleCellClick(i, j, currShipToPlaceLen, bot, player);
         });
       }
       row.append(cell);
     }
     board.append(row);
   }
-  if (shipsToPlace.length !== 0) {
-    const vertical = document.createElement("button");
-    vertical.innerText = "Vertical";
-    vertical.classList.add("placementButton", "vertical");
-    vertical.addEventListener("click", () => {
-      direction = "vertical";
-    });
-    const horizontal = document.createElement("button");
-    horizontal.innerText = "Horizontal";
-    horizontal.classList.add("placementButton", "horizontal");
-    horizontal.addEventListener("click", () => {
-      direction = "horizon";
-    });
-    const startText = document.createElement("h1");
-    startText.innerText = "Place your ships to start the game";
-    startText.classList.add("startText");
-    board.append(startText, vertical, horizontal);
-  }
+  if (shipsToPlace.length !== 0) board.append(...showShipPlacementButtons());
 
   document.querySelector(".gameboards").append(board);
 }
@@ -146,19 +90,20 @@ function drawBotBoard(bot, player) {
         cell.innerText = wordToIcon(bot.gameboard.map[i][j]);
         cell.classList.add(bot.gameboard.map[i][j]);
       }
-      cell.addEventListener("click", () => {
-        setTimeout(() => {
-          if (player.turn) {
-            if (player.humanTurn(bot.gameboard, i, j) === false) return;
-            [player.turn, bot.turn] = [false, true];
-            redraw("bot", bot, player);
-          }
-        }, 200);
-      });
+      if (shipsToPlace.length === 0) {
+        cell.addEventListener("click", () => {
+          setTimeout(() => {
+            if (player.turn && player.humanTurn(bot.gameboard, i, j)) {
+              [player.turn, bot.turn] = [false, true];
+              redraw("bot", bot, player);
+            }
+          }, 200);
+        });
+      }
       if (bot.turn) {
         bot.botTurn(player.gameboard);
-        redraw("player", bot, player);
         [player.turn, bot.turn] = [true, false];
+        redraw("player", bot, player);
       }
 
       row.append(cell);
@@ -194,4 +139,65 @@ function gameoverScreen(playerWon) {
   document.querySelector("body").append(winScreen);
 }
 
+function showShipPlacementButtons() {
+  const startText = document.createElement("h1");
+  startText.innerText = "Place your ships to start the game";
+  startText.classList.add("startText");
+  const vertical = document.createElement("button");
+  vertical.innerText = "Vertical";
+  vertical.classList.add("placementButton", "vertical");
+  vertical.addEventListener("click", () => {
+    direction = "vertical";
+  });
+  const horizontal = document.createElement("button");
+  horizontal.innerText = "Horizontal";
+  horizontal.classList.add("placementButton", "horizontal");
+  horizontal.addEventListener("click", () => {
+    direction = "horizon";
+  });
+  return [startText, vertical, horizontal];
+}
+
+function shipPlacementPreview(i, j) {
+  if (mouseoverLen[1] > 0 && i == mouseoverPos[0] && j >= mouseoverPos[1]) {
+    mouseoverLen[1] -= 1;
+    return true;
+  } else if (
+    mouseoverLen[0] > 0 &&
+    i >= mouseoverPos[0] &&
+    j == mouseoverPos[1]
+  ) {
+    mouseoverLen[0] -= 1;
+    return true;
+  }
+  return false;
+}
+
+function handleCellHover(i, j, currShipToPlaceLen, player, bot) {
+  overed = true;
+  mouseoverPos.push(i, j);
+  if (direction === "horizon") {
+    mouseoverLen[1] = currShipToPlaceLen;
+  } else {
+    mouseoverLen[0] = currShipToPlaceLen;
+  }
+  redraw("player", bot, player);
+}
+
+function handleCellUnhover(player, bot) {
+  mouseoverPos = [];
+  mouseoverLen = [0, 0];
+  overed = false;
+  redraw("player", bot, player);
+}
+
+function handleCellClick(i, j, currShipToPlaceLen, bot, player) {
+  if (
+    player.gameboard.placeShip([i, j], currShipToPlaceLen, direction) !== false
+  ) {
+    shipsToPlace.pop();
+  }
+  redraw("player", bot, player);
+  redraw("bot", bot, player);
+}
 export { drawPlayerBoard, drawBotBoard, createGameboardsDiv };
