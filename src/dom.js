@@ -40,32 +40,12 @@ function drawPlayerBoard(player, bot) {
   const title = document.createElement("h2");
   title.innerText = "You";
   board.append(title);
-
   board.classList.add("falsebot");
+
   for (let i = 0; i < 10; i++) {
     const row = document.createElement("tr");
     for (let j = 0; j < 10; j++) {
-      const cell = document.createElement("td");
-      cell.innerText = wordToIcon(player.gameboard.map[i][j]);
-      cell.classList.add(player.gameboard.map[i][j]);
-
-      // this section is for when player hasn't placed ships yet
-      if (shipsToPlace !== 0) {
-        const currShipToPlaceLen = shipsToPlace[shipsToPlace.length - 1];
-        if (!overed) {
-          cell.addEventListener("mouseenter", () => {
-            handleCellHover(i, j, currShipToPlaceLen, player, bot);
-          });
-        } else {
-          if (shipPlacementPreview(i, j)) cell.innerText = "🚢";
-          cell.addEventListener("mouseout", () => {
-            handleCellUnhover(player, bot);
-          });
-        }
-        cell.addEventListener("click", () => {
-          handleCellClick(i, j, currShipToPlaceLen, bot, player);
-        });
-      }
+      const cell = createPlayerCell(i, j, player, bot);
       row.append(cell);
     }
     board.append(row);
@@ -85,27 +65,7 @@ function drawBotBoard(bot, player) {
   for (let i = 0; i < 10; i++) {
     const row = document.createElement("tr");
     for (let j = 0; j < 10; j++) {
-      const cell = document.createElement("td");
-      if (bot.gameboard.map[i][j] !== "ship") {
-        cell.innerText = wordToIcon(bot.gameboard.map[i][j]);
-        cell.classList.add(bot.gameboard.map[i][j]);
-      }
-      if (shipsToPlace.length === 0) {
-        cell.addEventListener("click", () => {
-          setTimeout(() => {
-            if (player.turn && player.humanTurn(bot.gameboard, i, j)) {
-              [player.turn, bot.turn] = [false, true];
-              redraw("bot", bot, player);
-            }
-          }, 200);
-        });
-      }
-      if (bot.turn) {
-        bot.botTurn(player.gameboard);
-        [player.turn, bot.turn] = [true, false];
-        redraw("player", bot, player);
-      }
-
+      const cell = createBotCell(i, j, player, bot);
       row.append(cell);
     }
     board.append(row);
@@ -199,5 +159,64 @@ function handleCellClick(i, j, currShipToPlaceLen, bot, player) {
   }
   redraw("player", bot, player);
   redraw("bot", bot, player);
+}
+
+function createPlayerCell(i, j, player, bot) {
+  const cell = document.createElement("td");
+  cell.innerText = wordToIcon(player.gameboard.map[i][j]);
+  cell.classList.add(player.gameboard.map[i][j]);
+
+  // this section is for when player hasn't placed ships yet
+  if (shipsToPlace !== 0) {
+    handleShipPlacement(
+      i,
+      j,
+      player,
+      bot,
+      shipsToPlace[shipsToPlace.length - 1],
+      cell
+    );
+  }
+  return cell;
+}
+
+function createBotCell(i, j, player, bot) {
+  const cell = document.createElement("td");
+  if (bot.gameboard.map[i][j] !== "ship") {
+    cell.innerText = wordToIcon(bot.gameboard.map[i][j]);
+    cell.classList.add(bot.gameboard.map[i][j]);
+  }
+  if (shipsToPlace.length === 0) {
+    cell.addEventListener("click", () => {
+      setTimeout(() => {
+        if (player.turn && player.humanTurn(bot.gameboard, i, j)) {
+          [player.turn, bot.turn] = [false, true];
+          redraw("bot", bot, player);
+        }
+      }, 200);
+    });
+  }
+  if (bot.turn) {
+    bot.botTurn(player.gameboard);
+    [player.turn, bot.turn] = [true, false];
+    redraw("player", bot, player);
+  }
+  return cell;
+}
+
+function handleShipPlacement(i, j, player, bot, currShipToPlaceLen, cell) {
+  if (!overed) {
+    cell.addEventListener("mouseenter", () => {
+      handleCellHover(i, j, currShipToPlaceLen, player, bot);
+    });
+  } else {
+    if (shipPlacementPreview(i, j)) cell.innerText = "🚢";
+    cell.addEventListener("mouseout", () => {
+      handleCellUnhover(player, bot);
+    });
+  }
+  cell.addEventListener("click", () => {
+    handleCellClick(i, j, currShipToPlaceLen, bot, player);
+  });
 }
 export { drawPlayerBoard, drawBotBoard, createGameboardsDiv };
