@@ -100,7 +100,7 @@ function gameoverScreen(playerWon) {
 }
 
 function showShipPlacementButtons() {
-  const startText = document.createElement("h1");
+  const startText = document.createElement("h2");
   startText.innerText = "Place your ships to start the game";
   startText.classList.add("startText");
   const vertical = document.createElement("button");
