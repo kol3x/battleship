@@ -13,11 +13,6 @@ body {
     "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
 }
 
-table {
-  place-self: center;
-  display: grid;
-}
-
 tr {
   font-size: 30px;
   margin-bottom: 10px;
@@ -55,6 +50,8 @@ td {
 }
 
 .truebot {
+  place-self: center;
+  display: grid;
   background: linear-gradient(to right, #25c481, #25b7c4);
   padding: 20px;
   grid-column: 2;
@@ -62,6 +59,8 @@ td {
 }
 
 .falsebot {
+  place-self: center;
+  display: grid;
   background: linear-gradient(to right, #25c481, #25b7c4);
   padding: 20px;
   grid-column: 1;
@@ -71,27 +70,30 @@ td {
 
 h2 {
   place-self: center;
+  margin: 5px;
 }
 
 .mainHeader {
   font-size: 20px;
   grid-row: 1;
   display: grid;
-  grid-template-columns: 1fr 1rf;
+  grid-template-columns: 1fr 1fr;
 }
 
 h1.firstHead {
+  font-size: xx-large;
   place-self: end;
   border-left: 3px solid black;
-  padding-right: 60px;
+  padding-right: 25px;
 }
 
 h1.secondHead {
+  font-size: xx-large;
   grid-column: 2;
   place-self: start;
   color: white;
   border-right: 3px solid white;
-  padding-left: 15px;
+  padding-left: 33px;
 }
 
 .startButton {
